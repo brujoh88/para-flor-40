@@ -35,7 +35,9 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
 .cover-rule .l{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
 .cover-rule .d{width:5px;height:5px;background:var(--gold);transform:rotate(45deg)}
 .cover-verse{font-style:italic;font-size:clamp(.9rem,2vw,1rem);color:var(--gold-p);opacity:0;animation:fadeUp 1s ease forwards 2s;max-width:380px;line-height:1.7}
-.cover-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);opacity:0;animation:fadeUp .8s ease forwards 2.5s;display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;background:none;border:none;color:var(--gold)}
+.cover-music-hint{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;opacity:0;animation:fadeUp 1s ease forwards 2.3s;cursor:pointer;background:none;border:1px solid rgba(201,169,110,.3);padding:.5rem 1.5rem;border-radius:40px;transition:all .3s;margin-top:1rem}
+.cover-music-hint:hover{border-color:rgba(201,169,110,.6);background:rgba(201,169,110,.08)}
+.cover-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);opacity:0;animation:fadeUp .8s ease forwards 2.8s;display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;background:none;border:none;color:var(--gold)}
 .cover-scroll span{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase}
 .scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--gold),transparent);animation:blink 2s ease infinite 3s}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
@@ -108,7 +110,7 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
   margin-top:1.2rem;padding:1rem 1.2rem;border-radius:2px;
   font-family:'Cormorant Garamond',serif;font-style:italic;
   font-size:clamp(.95rem,2vw,1.05rem);line-height:1.6;text-align:center;
-  opacity:0;transition:opacity .4s ease;
+  opacity:0;transition:opacity .6s ease;
 }
 .quiz-feedback.show{opacity:1}
 .quiz-feedback.wrong-fb{background:rgba(180,80,80,.1);border:1px solid rgba(200,100,100,.25);color:#e8c0c0}
@@ -124,7 +126,7 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
 .retry-btn:hover{background:rgba(201,169,110,.12)}
 
 /* ── CONTENT STATE ── */
-.ch-content{display:none;opacity:0;transition:opacity .8s ease}
+.ch-content{display:none;opacity:0;transition:opacity 1.2s ease}
 .ch-content.visible{display:block;opacity:1}
 
 .letter-body{font-size:clamp(1rem,2.2vw,1.12rem);line-height:1.95;color:#e5dcc5}
@@ -224,7 +226,7 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
     <path d="M80 25 L90 13 L100 25 L110 13 L120 25 L110 37 L100 25 L90 37 Z" stroke="#c9a96e" stroke-width=".8" fill="none"/>
     <circle cx="100" cy="25" r="2" fill="#c9a96e" opacity=".6"/>
   </svg>
-  <p class="cover-eyebrow">2014 · 2026</p>
+  <p class="cover-eyebrow">13 años a tu lado · 40 vueltas al sol</p>
   <h1 class="cover-name">Florencia</h1>
   <p class="cover-sub">En tus cuarenta años</p>
   <div class="cover-rule"><div class="l"></div><div class="d"></div><div class="l"></div></div>
@@ -232,6 +234,7 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
     "El amor no pasará jamás."<br>
     <em style="font-size:.85em;opacity:.65">— 1 Corintios 13:8</em>
   </p>
+  <button class="cover-music-hint" onclick="toggleMusic();this.style.display='none'">🎵 Activá la música</button>
   <button class="cover-scroll" onclick="document.getElementById('chapnav').scrollIntoView({behavior:'smooth'})">
     <span>Descubrir</span>
     <div class="scroll-line"></div>
@@ -586,7 +589,7 @@ function handleAnswer(n, idx){
 
   if(chosen.correct){
     fb.classList.add('right-fb');
-    setTimeout(() => unlockChapter(n), 1000);
+    setTimeout(() => unlockChapter(n), 2800);
   } else {
     fb.classList.add('wrong-fb');
     attempts[n]++;
@@ -619,7 +622,7 @@ function unlockChapter(n){
     content.classList.add('visible');
     navBtn.classList.add('unlocked');
     navBtn.innerHTML = ['I','II','III','IV','V','VI'][n];
-  }, 500);
+  }, 800);
 }
 
 // ── NAV SCROLL ──
