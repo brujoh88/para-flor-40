@@ -35,12 +35,25 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
 .cover-rule .l{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
 .cover-rule .d{width:5px;height:5px;background:var(--gold);transform:rotate(45deg)}
 .cover-verse{font-style:italic;font-size:clamp(.9rem,2vw,1rem);color:var(--gold-p);opacity:0;animation:fadeUp 1s ease forwards 2s;max-width:380px;line-height:1.7}
-.cover-music-hint{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;opacity:0;animation:fadeUp 1s ease forwards 2.3s;cursor:pointer;background:none;border:1px solid rgba(201,169,110,.3);padding:.5rem 1.5rem;border-radius:40px;transition:all .3s;margin-top:1rem}
-.cover-music-hint:hover{border-color:rgba(201,169,110,.6);background:rgba(201,169,110,.08)}
-.cover-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);opacity:0;animation:fadeUp .8s ease forwards 2.8s;display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;background:none;border:none;color:var(--gold)}
-.cover-scroll span{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase}
-.scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--gold),transparent);animation:blink 2s ease infinite 3s}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.cover-start-btn{
+  font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.4em;color:var(--gold);
+  text-transform:uppercase;cursor:pointer;
+  background:none;border:1px solid rgba(201,169,110,.4);
+  padding:.9rem 2.5rem;border-radius:40px;
+  transition:all .4s ease;margin-top:1.8rem;
+  opacity:0;animation:fadeUp 1s ease forwards 2.3s;
+  position:relative;overflow:hidden;
+}
+.cover-start-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 30%,rgba(201,169,110,.12) 50%,transparent 70%);
+  background-size:200% 200%;animation:shimmer 3s ease infinite;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.cover-start-btn:hover{
+  border-color:var(--gold);background:rgba(201,169,110,.1);
+  box-shadow:0 0 25px rgba(201,169,110,.2);transform:scale(1.05);
+}
 
 /* ── CHAPTERS NAV ── */
 .nav-bar{
@@ -236,10 +249,8 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
     "El amor no pasará jamás."<br>
     <em style="font-size:.85em;opacity:.65">— 1 Corintios 13:8</em>
   </p>
-  <button class="cover-music-hint" onclick="toggleMusic();this.style.display='none'">🎵 Activá la música</button>
-  <button class="cover-scroll" onclick="document.getElementById('chapnav').scrollIntoView({behavior:'smooth'})">
-    <span>Descubrir</span>
-    <div class="scroll-line"></div>
+  <button class="cover-start-btn" id="startBtn" onclick="startRecorrido()">
+    Iniciar recorrido
   </button>
 </section>
 
@@ -685,6 +696,20 @@ let musicPlaying = false;
 const ytFrame = document.getElementById('ytFrame');
 const musicIcon = document.getElementById('musicIcon');
 const musicLabel = document.getElementById('musicLabel');
+
+function startRecorrido(){
+  const btn = document.getElementById('startBtn');
+  btn.style.pointerEvents = 'none';
+  btn.style.opacity = '0';
+  btn.style.transform = 'scale(0.9)';
+  btn.style.transition = 'all .6s ease';
+  // Start music
+  if(!musicPlaying) toggleMusic();
+  // Scroll to chapters
+  setTimeout(function(){
+    document.getElementById('chapnav').scrollIntoView({behavior:'smooth'});
+  }, 600);
+}
 
 function toggleMusic(){
   if(!musicPlaying){
