@@ -35,12 +35,25 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
 .cover-rule .l{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
 .cover-rule .d{width:5px;height:5px;background:var(--gold);transform:rotate(45deg)}
 .cover-verse{font-style:italic;font-size:clamp(.9rem,2vw,1rem);color:var(--gold-p);opacity:0;animation:fadeUp 1s ease forwards 2s;max-width:380px;line-height:1.7}
-.cover-music-hint{font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:.35em;color:var(--gold);text-transform:uppercase;opacity:0;animation:fadeUp 1s ease forwards 2.3s;cursor:pointer;background:none;border:1px solid rgba(201,169,110,.3);padding:.5rem 1.5rem;border-radius:40px;transition:all .3s;margin-top:1rem}
-.cover-music-hint:hover{border-color:rgba(201,169,110,.6);background:rgba(201,169,110,.08)}
-.cover-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);opacity:0;animation:fadeUp .8s ease forwards 2.8s;display:flex;flex-direction:column;align-items:center;gap:.4rem;cursor:pointer;background:none;border:none;color:var(--gold)}
-.cover-scroll span{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:.4em;text-transform:uppercase}
-.scroll-line{width:1px;height:36px;background:linear-gradient(to bottom,var(--gold),transparent);animation:blink 2s ease infinite 3s}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.cover-start-btn{
+  font-family:'Cinzel',serif;font-size:.7rem;letter-spacing:.4em;color:var(--gold);
+  text-transform:uppercase;cursor:pointer;
+  background:none;border:1px solid rgba(201,169,110,.4);
+  padding:.9rem 2.5rem;border-radius:40px;
+  transition:all .4s ease;margin-top:1.8rem;
+  opacity:0;animation:fadeUp 1s ease forwards 2.3s;
+  position:relative;overflow:hidden;
+}
+.cover-start-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 30%,rgba(201,169,110,.12) 50%,transparent 70%);
+  background-size:200% 200%;animation:shimmer 3s ease infinite;
+}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.cover-start-btn:hover{
+  border-color:var(--gold);background:rgba(201,169,110,.1);
+  box-shadow:0 0 25px rgba(201,169,110,.2);transform:scale(1.05);
+}
 
 /* ── CHAPTERS NAV ── */
 .nav-bar{
@@ -180,11 +193,12 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
 .final-photo img{width:100%;display:block;max-height:520px;object-fit:cover;object-position:center top}
 .final-overlay{
   position:absolute;bottom:0;left:0;right:0;
-  background:linear-gradient(to top,rgba(10,6,2,.85) 0%,transparent 60%);
-  padding:2rem 1.5rem 1.5rem;
+  background:linear-gradient(to top,rgba(10,6,2,.95) 0%,rgba(10,6,2,.8) 40%,transparent 80%);
+  padding:2.5rem 1.5rem 1.8rem;
   font-family:'Cormorant Garamond',serif;font-style:italic;
-  font-size:clamp(1.2rem,3vw,1.6rem);color:var(--gold-l);
-  text-align:center;line-height:1.4;
+  font-size:clamp(1.3rem,3.5vw,1.7rem);color:var(--gold-l);
+  text-align:center;line-height:1.5;
+  text-shadow:0 2px 8px rgba(0,0,0,.9),0 0 20px rgba(0,0,0,.7);
 }
 
 /* Signature */
@@ -194,6 +208,7 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
 
 /* Animations */
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}14%{transform:scale(1.25)}28%{transform:scale(1)}42%{transform:scale(1.2)}56%{transform:scale(1)}}
 
 /* ── MUSIC PLAYER ── */
 .music-bar{
@@ -234,10 +249,8 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
     "El amor no pasará jamás."<br>
     <em style="font-size:.85em;opacity:.65">— 1 Corintios 13:8</em>
   </p>
-  <button class="cover-music-hint" onclick="toggleMusic();this.style.display='none'">🎵 Activá la música</button>
-  <button class="cover-scroll" onclick="document.getElementById('chapnav').scrollIntoView({behavior:'smooth'})">
-    <span>Descubrir</span>
-    <div class="scroll-line"></div>
+  <button class="cover-start-btn" id="startBtn" onclick="startRecorrido()">
+    Iniciar recorrido
   </button>
 </section>
 
@@ -403,9 +416,9 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
         </div>
         <p>Mateo llegó para darnos una luz que no sabíamos cuánto necesitábamos. Ver el mundo en sus ojos es ver la gracia de Dios en su forma más concreta.</p>
         <p>Y en esas noches esperando, imaginando su cara, su voz — <span class="hl">Dios ya lo tenía en sus manos.</span> Así como nos tuvo a nosotros aquella noche que los dos queríamos quedarnos en casa.</p>
-        <div class="photo-frame">
-          <img id="img-tres1" src="" alt="Los tres juntos"/>
-          <p class="photo-caption">Gustavo · Flor · Mateo</p>
+        <div class="photo-frame" style="overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center">
+          <img id="img-tres1" src="" alt="Los tres juntos" style="transform:rotate(-90deg);width:auto;height:auto;min-width:100%;min-height:100%;object-fit:cover"/>
+          <p class="photo-caption" style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);padding:.5rem 0">Gustavo · Flor · Mateo</p>
         </div>
       </div>
     </div>
@@ -429,9 +442,9 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
     </div>
     <div class="ch-content" id="content5">
       <div class="letter-body">
-        <div class="photo-frame">
-          <img id="img-tres2" src="" alt="Los tres en casa"/>
-          <p class="photo-caption">Nuestra familia · hoy</p>
+        <div class="photo-frame" style="overflow:hidden;aspect-ratio:3/4;display:flex;align-items:center;justify-content:center">
+          <img id="img-tres2" src="" alt="Los tres en casa" style="transform:rotate(-90deg);width:auto;height:auto;min-width:100%;min-height:100%;object-fit:cover"/>
+          <p class="photo-caption" style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.5);padding:.5rem 0">Nuestra familia · hoy</p>
         </div>
         <p>Esa cita del domingo no es solo un horario — es el ancla de todo lo que somos. Porque como dije en 2014: <span class="hl">vivir en Dios es vivir fuera del tiempo.</span></p>
         <p>Cada lucha que vivimos, cada paso que costó, cada lágrima y cada risa — todo tiene sentido visto desde Él. <span class="hl">Nada fue casual. Todo fue parte de su obra.</span></p>
@@ -452,6 +465,10 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
       <div class="signature">
         <p class="sig-name">Flor</p>
         <p class="sig-tag" style="margin-top:.6rem">40 años · Marzo 2026</p>
+        <p style="margin-top:1.5rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:clamp(1.2rem,3vw,1.5rem);color:var(--gold-l);line-height:1.6">
+          Te amo con mi vida
+          <span class="beating-heart" style="display:inline-block;font-size:1.4em;animation:heartbeat 1.2s ease infinite;vertical-align:middle;margin-left:.3rem">&#10084;</span>
+        </p>
         <p class="sig-tag" style="margin-top:1.5rem;opacity:.5">Con amor · Gustavo</p>
       </div>
     </div>
@@ -486,7 +503,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById('img-m3').src = PHOTOS.p6_mateo_auto;
   document.getElementById('img-m4').src = PHOTOS.p7_mateo_silla;
   document.getElementById('img-m5').src = PHOTOS.p8_mateo_grande;
-  const imgTres1 = document.getElementById('img-tres1'); imgTres1.src = PHOTOS.p9_tres_iglesia; imgTres1.style.transform = "rotate(90deg)"; imgTres1.style.transformOrigin = "center"; imgTres1.style.width = "auto"; imgTres1.style.height = "100%"; imgTres1.style.maxHeight = "480px"; imgTres1.style.display = "block"; imgTres1.style.margin = "0 auto";
+  document.getElementById('img-tres1').src = PHOTOS.p9_tres_iglesia;
   document.getElementById('img-tres2').src = PHOTOS.p10_tres_casa;
   document.getElementById('img-ella').src = PHOTOS.p11_ella_sola;
 });
@@ -554,13 +571,25 @@ const quizzes = [
 const unlocked = [true, false, false, false, false, false];
 const attempts = [0,0,0,0,0,0];
 
+// ── SHUFFLE HELPER ──
+function shuffleArray(arr){
+  const a = arr.slice();
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 // ── RENDER QUIZZES ──
 function renderQuiz(n){
   const quiz = quizzes[n];
   if(!quiz) return;
   const container = document.getElementById(`opts${n}`);
   container.innerHTML = '';
-  quiz.opts.forEach((opt, i) => {
+  const shuffled = shuffleArray(quiz.opts);
+  quiz._shuffled = shuffled;
+  shuffled.forEach((opt, i) => {
     const btn = document.createElement('button');
     btn.className = 'opt-btn';
     btn.textContent = opt.t;
@@ -574,13 +603,14 @@ for(let i=1;i<=5;i++) renderQuiz(i);
 // ── HANDLE ANSWER ──
 function handleAnswer(n, idx){
   const quiz = quizzes[n];
+  const shuffled = quiz._shuffled;
   const opts = document.querySelectorAll(`#opts${n} .opt-btn`);
   const fb = document.getElementById(`fb${n}`);
   const retry = document.getElementById(`retry${n}`);
-  const chosen = quiz.opts[idx];
+  const chosen = shuffled[idx];
 
   opts.forEach((b,i) => {
-    b.classList.add(quiz.opts[i].correct ? 'correct' : 'wrong');
+    b.classList.add(shuffled[i].correct ? 'correct' : 'wrong');
     if(i !== idx) b.classList.add('dimmed');
   });
 
@@ -666,6 +696,20 @@ let musicPlaying = false;
 const ytFrame = document.getElementById('ytFrame');
 const musicIcon = document.getElementById('musicIcon');
 const musicLabel = document.getElementById('musicLabel');
+
+function startRecorrido(){
+  const btn = document.getElementById('startBtn');
+  btn.style.pointerEvents = 'none';
+  btn.style.opacity = '0';
+  btn.style.transform = 'scale(0.9)';
+  btn.style.transition = 'all .6s ease';
+  // Start music
+  if(!musicPlaying) toggleMusic();
+  // Scroll to chapters
+  setTimeout(function(){
+    document.getElementById('chapnav').scrollIntoView({behavior:'smooth'});
+  }, 600);
+}
 
 function toggleMusic(){
   if(!musicPlaying){
