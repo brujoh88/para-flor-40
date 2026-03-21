@@ -20,13 +20,16 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
 @keyframes twinkle{0%,100%{opacity:.08}50%{opacity:.55}}
 
 /* ── COVER ── */
+body.cover-active{overflow:hidden}
 .cover{
   min-height:100vh;display:flex;flex-direction:column;
   align-items:center;justify-content:center;
-  position:relative;z-index:1;
+  position:fixed;inset:0;z-index:200;
   background:radial-gradient(ellipse at 50% 40%,#2a1a08 0%,#0a0602 70%);
   padding:2rem;text-align:center;overflow:hidden;
+  transition:opacity .8s ease,transform .8s ease;
 }
+.cover.dismissed{opacity:0;transform:translateY(-30px);pointer-events:none}
 .cover-ornament{width:200px;opacity:0;animation:fadeUp 1.2s ease forwards .3s;margin-bottom:2rem}
 .cover-eyebrow{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:.5em;color:var(--gold);text-transform:uppercase;opacity:0;animation:fadeUp 1s ease forwards .8s;margin-bottom:1rem}
 .cover-name{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,12vw,8rem);font-weight:300;font-style:italic;color:var(--gold-l);line-height:1;opacity:0;animation:fadeUp 1.2s ease forwards 1s}
@@ -229,7 +232,7 @@ body{background:var(--ink);font-family:'EB Garamond',Georgia,serif;color:var(--c
 
 </style>
 </head>
-<body>
+<body class="cover-active">
 
 <div id="stars"></div>
 
@@ -698,17 +701,15 @@ const musicIcon = document.getElementById('musicIcon');
 const musicLabel = document.getElementById('musicLabel');
 
 function startRecorrido(){
-  const btn = document.getElementById('startBtn');
-  btn.style.pointerEvents = 'none';
-  btn.style.opacity = '0';
-  btn.style.transform = 'scale(0.9)';
-  btn.style.transition = 'all .6s ease';
+  const cover = document.querySelector('.cover');
+  cover.classList.add('dismissed');
+  document.body.classList.remove('cover-active');
   // Start music
   if(!musicPlaying) toggleMusic();
-  // Scroll to chapters
+  // Remove cover from DOM after animation
   setTimeout(function(){
-    document.getElementById('chapnav').scrollIntoView({behavior:'smooth'});
-  }, 600);
+    cover.style.display = 'none';
+  }, 900);
 }
 
 function toggleMusic(){
