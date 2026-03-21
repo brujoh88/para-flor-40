@@ -82,6 +82,7 @@ body.cover-active{overflow:hidden}
   display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
   position:relative;
 }
+.chapter.ch-hidden{display:none}
 .chapter:nth-child(odd){background:radial-gradient(ellipse at 30% 60%,#1e1408 0%,#0a0602 80%)}
 .chapter:nth-child(even){background:radial-gradient(ellipse at 70% 40%,#160e05 0%,#080401 80%)}
 
@@ -294,7 +295,7 @@ body.cover-active{overflow:hidden}
 </section>
 
 <!-- CH 1 -->
-<section class="chapter" id="ch1">
+<section class="chapter ch-hidden" id="ch1">
   <div class="ch-inner">
     <p class="ch-number">Capítulo II</p>
     <h2 class="ch-title">El sueño<br>que Él reveló</h2>
@@ -327,7 +328,7 @@ body.cover-active{overflow:hidden}
 </section>
 
 <!-- CH 2 -->
-<section class="chapter" id="ch2">
+<section class="chapter ch-hidden" id="ch2">
   <div class="ch-inner">
     <p class="ch-number">Capítulo III</p>
     <h2 class="ch-title">Juntos en<br>cada batalla</h2>
@@ -360,7 +361,7 @@ body.cover-active{overflow:hidden}
 </section>
 
 <!-- CH 3 -->
-<section class="chapter" id="ch3">
+<section class="chapter ch-hidden" id="ch3">
   <div class="ch-inner">
     <p class="ch-number">Capítulo IV</p>
     <h2 class="ch-title">Lo que solo<br>nosotros sabemos</h2>
@@ -393,7 +394,7 @@ body.cover-active{overflow:hidden}
 </section>
 
 <!-- CH 4 -->
-<section class="chapter" id="ch4">
+<section class="chapter ch-hidden" id="ch4">
   <div class="ch-inner">
     <p class="ch-number">Capítulo V</p>
     <h2 class="ch-title">Mateo · nuestra<br>luz prometida</h2>
@@ -429,7 +430,7 @@ body.cover-active{overflow:hidden}
 </section>
 
 <!-- CH 5 · FINAL -->
-<section class="chapter" id="ch5">
+<section class="chapter ch-hidden" id="ch5">
   <div class="ch-inner">
     <p class="ch-number">Capítulo VI · Final</p>
     <h2 class="ch-title">Cada domingo<br>y cada día</h2>
@@ -655,11 +656,22 @@ function unlockChapter(n){
     content.classList.add('visible');
     navBtn.classList.add('unlocked');
     navBtn.innerHTML = ['I','II','III','IV','V','VI'][n];
+
+    // Reveal the NEXT chapter (show it so user can scroll to its quiz)
+    const nextCh = document.getElementById(`ch${n + 1}`);
+    if(nextCh) {
+      nextCh.classList.remove('ch-hidden');
+      // Smooth scroll to the unlocked content
+      setTimeout(() => {
+        content.scrollIntoView({behavior:'smooth'});
+      }, 400);
+    }
   }, 800);
 }
 
 // ── NAV SCROLL ──
 function scrollTo(n){
+  if(n > 0 && !unlocked[n]) return; // can't navigate to locked chapters
   document.getElementById(`ch${n}`).scrollIntoView({behavior:'smooth'});
 }
 
@@ -706,6 +718,9 @@ function startRecorrido(){
   document.body.classList.remove('cover-active');
   // Start music
   if(!musicPlaying) toggleMusic();
+  // Reveal ch1 (first locked chapter) so user sees its quiz after ch0
+  const ch1 = document.getElementById('ch1');
+  if(ch1) ch1.classList.remove('ch-hidden');
   // Remove cover from DOM after animation
   setTimeout(function(){
     cover.style.display = 'none';
